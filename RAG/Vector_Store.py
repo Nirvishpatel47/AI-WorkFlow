@@ -11,9 +11,7 @@ from qdrant_client.models import (
 
 import uuid
 
-
 logger = AdvancedLogger()
-
 
 QDRANT_URL = load_env_from_secret("QDRANT_URL")
 QDRANT_API_KEY = load_env_from_secret("QDRANT_API_KEY")
