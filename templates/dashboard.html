@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard</title>
+
+    <link rel="stylesheet" href="/static/dashboard.css">
+
+</head>
+
+<body>
+
+    <div class="layout">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+
+            <div class="logo">
+
+                Smart AI
+
+            </div>
+
+            <nav>
+
+                <a href="/dashboard" class="nav-item active">
+                    Dashboard
+                </a>
+
+                <a href="#" class="nav-item">
+                    Documents
+                </a>
+
+                <a href="#" class="nav-item">
+                    Chats
+                </a>
+
+                <a href="#" class="nav-item">
+                    Settings
+                </a>
+
+            </nav>
+
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <div class="upload-card">
+
+                <div class="user-info">
+
+                    <h2 id="username"></h2>
+
+                    <p id="useremail"></p>
+
+                </div>
+
+                <h1>Upload Document</h1>
+
+                <p class="subtitle">
+                    Upload PDF, DOCX, EML, CSV, Excel or code files
+                </p>
+
+                <form id="uploadForm">
+
+                    <div class="file-input-wrapper">
+
+                        <input
+                            type="file"
+                            id="fileInput"
+                            name="file"
+                            required
+                        >
+
+                    </div>
+
+                    <button type="submit">
+                        Upload File
+                    </button>
+
+                </form>
+
+                <p id="message"></p>
+
+                <textarea
+                    id="output"
+                    placeholder="Extracted text will appear here..."
+                ></textarea>
+
+            </div>
+
+        </main>
+
+    </div>
+
+    <script src="/static/dashboard.js"></script>
+
+</body>
+
+</html>

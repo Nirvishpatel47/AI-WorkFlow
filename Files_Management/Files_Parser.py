@@ -1,4 +1,4 @@
-from Log.Advance_Logger import AdvancedLogger
+from Security.Advance_Logger import AdvancedLogger
 from pathlib import Path
 from email import policy
 from email.parser import BytesParser

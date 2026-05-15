@@ -7,7 +7,7 @@ from argon2.exceptions import VerifyMismatchError
 logger = AdvancedLogger()
 
 class UserConnection:
-    def __init__(self,):
+    def __init__(self):
         self.engine = create_engine(load_env_from_secret("DATABASE_URL"))
         self.ph = PasswordHasher()
         self.create_table()
@@ -97,3 +97,27 @@ class UserConnection:
             }
         except VerifyMismatchError:
             return False
+        
+    def get_Id_From_email(self, email: str) -> int:
+        try:
+            with self.engine.connect() as conn:
+                result = conn.execute(
+                    text("""
+                        SELECT id
+                        FROM users
+                        WHERE email = :email
+                    """),
+                    {
+                        "email": email
+                    }
+                )
+
+                row = result.fetchone()
+
+                if row:
+                    return row.id
+                
+                return None
+        except Exception as e:
+            logger.error("UserConnection.get_Id_From_email", e)
+            return ""

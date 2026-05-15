@@ -1,0 +1,201 @@
+* {
+
+    margin: 0;
+
+    padding: 0;
+
+    box-sizing: border-box;
+}
+
+body {
+
+    font-family: Arial, sans-serif;
+
+    background: #f4f4f4;
+
+    height: 100vh;
+}
+
+.layout {
+
+    display: flex;
+
+    height: 100vh;
+}
+
+/* Sidebar */
+
+.sidebar {
+
+    width: 240px;
+
+    background: #111;
+
+    color: white;
+
+    display: flex;
+
+    flex-direction: column;
+
+    padding: 25px 20px;
+}
+
+.logo {
+
+    font-size: 24px;
+
+    font-weight: bold;
+
+    margin-bottom: 40px;
+}
+
+nav {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+.nav-item {
+
+    color: white;
+
+    text-decoration: none;
+
+    padding: 12px;
+
+    border-radius: 6px;
+
+    transition: 0.2s;
+}
+
+.nav-item:hover {
+
+    background: rgba(255,255,255,0.1);
+}
+
+.nav-item.active {
+
+    background: rgba(255,255,255,0.15);
+}
+
+/* Main Content */
+
+.main-content {
+
+    flex: 1;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    padding: 30px;
+}
+
+.upload-card {
+
+    width: 700px;
+
+    background: white;
+
+    padding: 40px;
+
+    border-radius: 12px;
+
+    box-shadow: 0 0 15px rgba(0,0,0,0.08);
+}
+
+.upload-card h1 {
+
+    margin-bottom: 10px;
+}
+
+.subtitle {
+
+    color: #666;
+
+    margin-bottom: 25px;
+}
+
+.file-input-wrapper {
+
+    margin-bottom: 20px;
+}
+
+input[type="file"] {
+
+    width: 100%;
+}
+
+button {
+
+    width: 100%;
+
+    padding: 14px;
+
+    border: none;
+
+    background: black;
+
+    color: white;
+
+    border-radius: 6px;
+
+    cursor: pointer;
+
+    font-size: 16px;
+}
+
+button:hover {
+
+    opacity: 0.9;
+}
+
+#message {
+
+    margin-top: 20px;
+
+    text-align: center;
+}
+
+textarea {
+
+    width: 100%;
+
+    height: 300px;
+
+    margin-top: 20px;
+
+    padding: 15px;
+
+    border: 1px solid #ccc;
+
+    border-radius: 6px;
+
+    resize: none;
+
+    font-family: monospace;
+}
+
+.user-info {
+
+    margin-bottom: 25px;
+
+    padding-bottom: 15px;
+
+    border-bottom: 1px solid #ddd;
+}
+
+.user-info h2 {
+
+    margin-bottom: 5px;
+}
+
+.user-info p {
+
+    color: #666;
+}
