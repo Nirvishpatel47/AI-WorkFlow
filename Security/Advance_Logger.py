@@ -22,11 +22,11 @@ class AdvancedLogger:
             file_handler.setFormatter(formatter)
             self.logger.addHandler(file_handler)
 
-    def info(self, message: str):
+    def info(self, message: str = ""):
         """Standard informational logging."""
         self.logger.info(message)
 
-    def error(self, function_name: str, error: Exception):
+    def error(self, function_name: str = "", error: Exception = ""):
         """
         Safe logging for errors. 
         Captures the function name and the full traceback for debugging.
@@ -34,10 +34,10 @@ class AdvancedLogger:
         error_msg = f"Error in {function_name}: {str(error)}"
         self.logger.error(error_msg, exc_info=True)
 
-    def warning(self, message: str):
+    def warning(self, message: str = ""):
         """Log unexpected events that aren't necessarily breaking the app."""
         self.logger.warning(message)
 
-    def critical(self, message: str):
+    def critical(self, message: str = ""):
         """Log failures that require immediate attention."""
         self.logger.critical(f"FATAL: {message}")

@@ -6,7 +6,10 @@ from qdrant_client import QdrantClient
 from qdrant_client.models import (
     VectorParams,
     Distance,
-    PointStruct
+    PointStruct,
+    FieldCondition,
+    Filter,
+    MatchValue
 )
 
 import uuid
@@ -60,7 +63,7 @@ class VectorStore:
                 e
             )
 
-    def add_vector(self, query: str) -> bool:
+    def add_vector(self, query: str, Documnet_id: int = 0) -> bool:
         try:
             vector = self.gemini.generate_embeddings(query)
 
@@ -74,7 +77,8 @@ class VectorStore:
                         id=str(uuid.uuid4()),
                         vector=vector.tolist(),
                         payload={
-                            "text": query
+                            "text": query,
+                            "document_id": Documnet_id
                         }
                     )
                 ]
@@ -112,6 +116,27 @@ class VectorStore:
         except Exception as e:
             logger.error("VectorStore.search_vector", e)
             return []
+    
+
+    def delete_vectors_by_document_id(self, document_id: int) -> bool:
+        try:
+            self.client.delete(
+                collection_name=COLLECTION_NAME,
+                points_selector=Filter(
+                    must=[
+                        FieldCondition(
+                            key="document_id",
+                            match=MatchValue(value=document_id)
+                        )
+                    ]
+                )
+            )
+
+            return True
+
+        except Exception as e:
+            logger.error("VectorStore.delete_vectors_by_document_id", e)
+            return False
 
 
 if __name__ == "__main__":

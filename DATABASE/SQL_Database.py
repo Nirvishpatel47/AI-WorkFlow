@@ -1,3 +1,4 @@
+#Run via python -m DATABASE.SQL_Database
 from sqlalchemy import create_engine, text
 from Security.Advance_Logger import AdvancedLogger
 from Security.get_secretes import load_env_from_secret
@@ -28,6 +29,29 @@ class UserConnection:
                 conn.commit()
         except Exception as e:
             logger.error("UserConnection.create_table", e)
+
+    def create_document_table(self):
+        try:
+            with self.engine.connect() as conn:
+                conn.execute(text("""
+                    CREATE TABLE IF NOT EXISTS documents (
+                        id SERIAL PRIMARY KEY,
+                        user_id INTEGER NOT NULL,
+                        file_name TEXT NOT NULL,
+                        extension TEXT NOT NULL,
+                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                        FOREIGN KEY (user_id)
+                            REFERENCES users(id)
+                            ON DELETE CASCADE
+                    )
+                """))
+                conn.commit()
+            return True
+        except Exception as e:
+            logger.error(
+                f"UserConnection.create_document_table", e
+            )
+            return False
 
     # Create new user
     def create_user(self, name, email, password):
@@ -121,3 +145,60 @@ class UserConnection:
         except Exception as e:
             logger.error("UserConnection.get_Id_From_email", e)
             return ""
+        
+    def add_document( self, user_id: int, file_name: str, extension: str ):
+        try:
+            with self.engine.connect() as conn:
+                result = conn.execute(
+                    text("""
+                        INSERT INTO documents (
+                            user_id,
+                            file_name,
+                            extension
+                        )
+                        VALUES (
+                            :user_id,
+                            :file_name,
+                            :extension
+                        )
+                        RETURNING id
+                    """),
+                    {
+                        "user_id": user_id,
+                        "file_name": file_name,
+                        "extension": extension
+                    }
+                )
+                document = result.fetchone()
+                conn.commit()
+                return document.id
+            
+        except Exception as e:
+            logger.error(
+                f"UserConnection.add_document", e
+            )
+            return None
+        
+    def delete_document(self, document_id: int) -> bool:
+        try:
+            with self.engine.connect() as conn:
+                result=conn.execute(
+                    text("""
+                        DELETE FROM documents
+                        WHERE id=:document_id
+                    """),
+                    {
+                        "document_id":document_id
+                    }
+                )
+                conn.commit()
+                return result.rowcount>0
+
+        except Exception as e:
+            logger.error(
+                f"UserConnection.delete_document", e
+            )
+            return False
+        
+if __name__ == "__main__":
+    UserConnection().create_document_table()
