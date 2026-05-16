@@ -105,11 +105,7 @@ class VectorStore:
 
             output = []
 
-            for result in results.points:
-                output.append({
-                    "score": result.score,
-                    "payload": result.payload
-                })
+            for result in results.points: output.append(result.payload)
 
             return output
 

@@ -1,12 +1,18 @@
-from fastapi import FastAPI, Form, UploadFile, File
+from fastapi import FastAPI, Form, UploadFile, File, Depends
 from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi import Header, HTTPException
 from fastapi.staticfiles import StaticFiles
 from DATABASE.SQL_Database import UserConnection
 from Security.Advance_Logger import AdvancedLogger
+from Security.JWT_token import create_token, decode_token
+from RAG.EmbeddingsGenerationnStorage import EmbeddingsALL
 from Files_Management.Files_Parser import ParseFile
+from pathlib import Path
 import os
 import tempfile
 import shutil
+
+Embedding_Generator = EmbeddingsALL()
 
 logger = AdvancedLogger()
 
@@ -15,6 +21,15 @@ app = FastAPI()
 User_Connection = UserConnection()
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
+
+def get_user_id(authorization: str = Header(...)):
+    try:
+        token = authorization.split(" ")[1]  # "Bearer <token>"
+        return decode_token(token)
+    except:
+        raise HTTPException(status_code=401, detail="Invalid token")
+    
 
 #Login Page
 @app.get("/", response_class=HTMLResponse)
@@ -28,14 +43,17 @@ async def login( email: str = Form(...), password: str = Form(...) ):
     try:
         user = User_Connection.login_user(email=email, password=password)
         if user:
+            logger.info(user)
+            token = create_token(user_id=user["id"], email=email)
             return JSONResponse(
                         {
                             "success": True,
                             "message": "Login successful",
+                            "token": token,
                             "user": {
-                                "id": user.id,
-                                "name": user.name,
-                                "email": user.email
+                                "id": user["id"],
+                                "name": user["name"],
+                                "email": user["email"]
                             }
                         }
                     )
@@ -51,11 +69,14 @@ async def login( email: str = Form(...), password: str = Form(...) ):
 
 @app.post("/signin")
 async def signin(name: str = Form(...), email: str = Form(...), password: str = Form(...)) -> bool:
+    user_id = User_Connection.get_Id_From_email(email=email)
+    token = create_token(user_id=user_id, email=email)
     if User_Connection.create_user(name=name, email=email, password=password):
         return JSONResponse(
             {
                 "success": True,
                 "message": "sign-in successful",
+                "token": token,
                 "user": {
                     "id": User_Connection.get_Id_From_email(email=email),
                     "name": name,
@@ -71,28 +92,42 @@ async def signin(name: str = Form(...), email: str = Form(...), password: str = 
     )
 
 @app.post("/addDocument")
-async def add_document( file: UploadFile = File(...) ):
+async def add_document(user_id: int = Depends(get_user_id), file: UploadFile = File(...) ):
+    logger.info(user_id)
     temp_path = None
     try:
         suffix = os.path.splitext( file.filename )[1]
+        file_name = file.filename
+        file_extension = Path(file_name).suffix
 
         # Create temp file
         with tempfile.NamedTemporaryFile( delete=False, suffix=suffix ) as temp_file:
             shutil.copyfileobj( file.file, temp_file )
             temp_path = temp_file.name
 
-        # Parse file
         extracted_text = ParseFile.parse_any_file(
             temp_path
         )
+
+        if Embedding_Generator.generate_and_store_embeddings(user_id=user_id, file_name=file_name, extension=file_extension, Text=extracted_text):
+            return JSONResponse(
+                {
+                    "success": True,
+                    "filename": file.filename,
+                    "text": extracted_text
+                }
+            )
+        
+        logger.error("add_document", "Failed to add document.")
         return JSONResponse(
             {
-                "success": True,
-                "filename": file.filename,
-                "text": extracted_text
+                "success": False,
+                "message": "Failed to add Document!"
             }
         )
+    
     except Exception as e:
+        logger.error("add_documents", e)
         return JSONResponse(
             {
                 "success": False,
@@ -103,6 +138,25 @@ async def add_document( file: UploadFile = File(...) ):
         # Cleanup temp file
         if temp_path and os.path.exists(temp_path):
             os.remove(temp_path)
+
+@app.post("/chat")
+async def chat(query: str = Form(...)):
+    try:
+        answer = Embedding_Generator.answer_from_embeddings(query)
+        return JSONResponse(
+            {
+                "success": True,
+                "message": str(answer)
+            }
+        )
+    except Exception as e:
+        logger.error("Frontend_Connection.chat", e)
+        return JSONResponse(
+            {
+                "success": False,
+                "message": "Failed to generate answer. Please try Again later!"
+            }
+        )
 
 @app.get("/signin", response_class=HTMLResponse)
 async def signin_page():
@@ -119,4 +173,9 @@ async def signin_page():
 async def Dashboard_page():
 
     with open("templates/dashboard.html", "r", encoding="utf-8") as file:
+        return file.read()
+    
+@app.get("/chat", response_class=HTMLResponse)
+async def chat_page():
+    with open("templates/chat.html", "r", encoding="utf-8") as file:
         return file.read()

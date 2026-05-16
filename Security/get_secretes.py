@@ -75,7 +75,7 @@ def fetch_from_doppler():
         return secrets
 
     except Exception as e:
-        logging.error(f"Doppler fetch error: {e}")
+        #logging.error(f"Doppler fetch error: {e}")
         return {}
 
 

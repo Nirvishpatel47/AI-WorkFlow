@@ -24,10 +24,7 @@ loginForm.addEventListener("submit", async (e) => {
         message.style.color = "green";
 
         // Store user
-        localStorage.setItem(
-            "user",
-            JSON.stringify(data.user)
-        );
+        localStorage.setItem("token", data.token);
 
         // Redirect
         window.location.href = "/dashboard";

@@ -1,6 +1,20 @@
-const user = JSON.parse(
-    localStorage.getItem("user")
-);
+const token = localStorage.getItem("token");
+
+// redirect if not logged in
+if (!token) {
+    window.location.href = "/";
+}
+
+// decode only for UI (optional)
+function parseJwt(token) {
+    return JSON.parse(atob(token.split(".")[1]));
+}
+
+const user = parseJwt(token);
+
+// display
+document.getElementById("username").innerText = user.name;
+document.getElementById("useremail").innerText = user.email;
 
 // Redirect if not logged in
 if (!user) {
@@ -39,10 +53,11 @@ uploadForm.addEventListener("submit", async (e) => {
 
     formData.append("file", file);
 
-    const response = await fetch("/addDocument", {
-
+    fetch("/addDocument", {
         method: "POST",
-
+        headers: {
+            "Authorization": "Bearer " + localStorage.getItem("token")
+        },
         body: formData
     });
 
