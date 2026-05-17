@@ -201,13 +201,44 @@ class ParseFile:
     })
 
     CODE_EXTENSIONS = frozenset({
-        ".py", ".js", ".ts", ".java",
-        ".c", ".cpp", ".cs", ".go",
-        ".rs", ".php", ".rb", ".swift",
-        ".kt", ".html", ".css",
-        ".json", ".xml", ".yaml",
-        ".yml", ".txt"
-    })
+    ".py", ".pyi",
+    ".js", ".jsx", ".mjs", ".cjs",
+    ".ts", ".tsx",
+    ".java",
+    ".c", ".h",
+    ".cpp", ".cc", ".cxx", ".hpp", ".hh", ".hxx",
+    ".cs",
+    ".go",
+    ".rs",
+    ".php",
+    ".rb",
+    ".swift",
+    ".kt", ".kts",
+    ".scala",
+    ".dart",
+    ".r",
+    ".lua",
+    ".pl",
+    ".sh", ".bash", ".zsh",
+    ".ps1",
+    ".sql",
+    ".html", ".htm",
+    ".css", ".scss", ".sass", ".less",
+    ".json",
+    ".xml",
+    ".yaml", ".yml",
+    ".toml",
+    ".ini",
+    ".cfg",
+    ".env",
+    ".md",
+    ".txt",
+    ".dockerfile",
+    ".tf",
+    ".vue",
+    ".svelte",
+    ".ipynb"
+})
 
     @staticmethod
     def parse_any_file(path: str) -> str:
@@ -242,7 +273,70 @@ class ParseFile:
             logger.error("ParseFile.parse_any_file", e)
             return ""
         
+class Chunker:
+    @staticmethod
+    def chunk_text(text: str, chunk_size: int = 1200, chunk_overlap: int = 200) -> list[str]:
+        """
+        Splits standard text files into overlapping segments to keep context intact.
+        """
+        if not text or not text.strip():
+            return []
+        
+        chunks = []
+        start = 0
+        text_len = len(text)
+        
+        while start < text_len:
+            end = start + chunk_size
+            chunk = text[start:end]
+            chunks.append(chunk.strip())
+            # Shift forward by the size minus overlap to create a sliding window
+            start += (chunk_size - chunk_overlap)
+            
+        return chunks
+
+    @staticmethod
+    def chunk_code(code: str, language_suffix: str) -> list[str]:
+        """
+        Heuristic splitter designed to isolate logical blocks in programming code.
+        """
+        if not code or not code.strip():
+            return []
+
+        # Split by lines to analyze block structure
+        lines = code.splitlines()
+        chunks = []
+        current_chunk = []
+        current_length = 0
+        
+        brace_languages = {".js", ".jsx", ".ts", ".tsx", ".java", ".c", ".h", ".cpp", ".cc", ".cxx", ".hpp", ".hh", ".hxx", ".cs", ".go", ".rs", ".php", ".swift", ".kt", ".kts", ".scala", ".dart", ".groovy", ".m", ".mm", ".zig", ".vue", ".css", ".scss", ".sass", ".less", ".json", }
+        
+        brace_count = 0
+        
+        for line in lines:
+            current_chunk.append(line)
+            current_length += len(line)
+            
+            if language_suffix in brace_languages:
+                brace_count += line.count("{") - line.count("}")
+                if brace_count == 0 and current_length > 800:
+                    chunks.append("\n".join(current_chunk))
+                    current_chunk = []
+                    current_length = 0
+            else:
+                if (line.startswith("def ") or line.startswith("class ") or line.startswith("import ")) and current_length > 800:
+                    next_start = current_chunk.pop()
+                    if current_chunk:
+                        chunks.append("\n".join(current_chunk))
+                    current_chunk = [next_start]
+                    current_length = len(next_start)
+
+        if current_chunk:
+            chunks.append("\n".join(current_chunk))
+            
+        return chunks
+    
 if __name__ == "__main__":
-    lis = [r"F:\Smart AI workflow\Workflow\Log\Advance_Logger.py",r"F:\Testing\sample4.csv"]
+    lis = [r"F:\Smart AI workflow\Workflow\Frontend_Connection.py"]
     for i in lis:
-        print(ParseFile.parse_any_file(i), "/n/nNew: ")
+        print(Chunker.chunk_code(ParseFile.parse_any_file(i), ".py"))

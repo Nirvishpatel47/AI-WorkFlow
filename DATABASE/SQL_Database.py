@@ -12,11 +12,13 @@ class UserConnection:
         self.engine = create_engine(load_env_from_secret("DATABASE_URL"))
         self.ph = PasswordHasher()
         self.create_table()
+        self.create_document_table()
+        self.create_chat_history_table()
 
     # Create users table
     def create_table(self):
         try:
-            with self.engine.connect() as conn:
+            with self.engine.begin() as conn:
                 conn.execute(text("""
                     CREATE TABLE IF NOT EXISTS users (
                         id SERIAL PRIMARY KEY,
@@ -32,7 +34,7 @@ class UserConnection:
 
     def create_document_table(self):
         try:
-            with self.engine.connect() as conn:
+            with self.engine.begin() as conn:
                 conn.execute(text("""
                     CREATE TABLE IF NOT EXISTS documents (
                         id SERIAL PRIMARY KEY,
@@ -52,12 +54,39 @@ class UserConnection:
                 f"UserConnection.create_document_table", e
             )
             return False
+    
+    def create_chat_history_table(self) -> bool:
+        """
+        Creates the chat_history partition table with indexing constraints for multi-tenant isolation.
+        """
+        try:
+            with self.engine.begin() as conn:
+                conn.execute(text("""
+                    CREATE TABLE IF NOT EXISTS chat_history (
+                        id SERIAL PRIMARY KEY,
+                        user_id INTEGER NOT NULL,
+                        role TEXT NOT NULL,
+                        message TEXT NOT NULL,
+                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                        FOREIGN KEY (user_id)
+                            REFERENCES users(id)
+                            ON DELETE CASCADE
+                    );
+                    
+                    CREATE INDEX IF NOT EXISTS idx_chat_history_user_date 
+                    ON chat_history (user_id, created_at DESC);
+                """))
+                conn.commit()
+            return True
+        except Exception as e:
+            logger.error("UserConnection.create_chat_history_table", e)
+            return False
 
     # Create new user
     def create_user(self, name, email, password):
         try:
             hashed_password = self.ph.hash(password)
-            with self.engine.connect() as conn:
+            with self.engine.begin() as conn:
                 conn.execute(
                     text("""
                         INSERT INTO users (
@@ -87,7 +116,7 @@ class UserConnection:
     # Get user by email
     def get_user_by_email(self, email):
         try:
-            with self.engine.connect() as conn:
+            with self.engine.begin() as conn:
                 result = conn.execute(
                     text("""
                         SELECT *
@@ -124,7 +153,7 @@ class UserConnection:
         
     def get_Id_From_email(self, email: str) -> int:
         try:
-            with self.engine.connect() as conn:
+            with self.engine.begin() as conn:
                 result = conn.execute(
                     text("""
                         SELECT id
@@ -148,7 +177,7 @@ class UserConnection:
         
     def add_document( self, user_id: int, file_name: str, extension: str ):
         try:
-            with self.engine.connect() as conn:
+            with self.engine.begin() as conn:
                 result = conn.execute(
                     text("""
                         INSERT INTO documents (
@@ -179,16 +208,18 @@ class UserConnection:
             )
             return None
         
-    def delete_document(self, document_id: int) -> bool:
+    def delete_document(self, user_id: int, document_id: int) -> bool:
         try:
-            with self.engine.connect() as conn:
+            with self.engine.begin() as conn:
                 result=conn.execute(
                     text("""
                         DELETE FROM documents
                         WHERE id=:document_id
+                        AND user_id=:user_id
                     """),
                     {
-                        "document_id":document_id
+                        "document_id":document_id,
+                        "user_id": user_id
                     }
                 )
                 conn.commit()
@@ -199,6 +230,80 @@ class UserConnection:
                 f"UserConnection.delete_document", e
             )
             return False
+    
+    def get_documents_data_by_userId(self, user_id: int) -> list[dict]:
+        try:
+            with self.engine.begin() as conn:
+                result = conn.execute(
+                    text("""
+                        SELECT id, file_name, extension, created_at
+                        FROM documents
+                        WHERE user_id = :user_id
+                    """),
+                    {"user_id": user_id}
+                )
+
+                documents = [dict(row._mapping) for row in result]
+
+                return documents
+
+        except Exception as e:
+            logger.error("UserConnection.get_documents_data_by_userID", e)
+            return False
+        
+    def save_chat_turn(self, user_id: int, role: str, message: str) -> bool:
+        """
+        Inserts a single chat turn metadata payload under explicit user boundary ownership.
+        """
+        try:
+            with self.engine.begin() as conn:
+                conn.execute(
+                    text("""
+                        INSERT INTO chat_history (user_id, role, message)
+                        VALUES (:user_id, :role, :message)
+                    """),
+                    {
+                        "user_id": user_id,
+                        "role": role,
+                        "message": message
+                    }
+                )
+                conn.commit()
+            return True
+        except Exception as e:
+            logger.error("UserConnection.save_chat_turn", e)
+            return False
+
+    def get_recent_chat_history(self, user_id: int, limit: int = 6) -> list[dict]:
+        """
+        Retrieves the latest exchanges for a user sorted chronologically (oldest to newest).
+        """
+        try:
+            with self.engine.begin() as conn:
+                result = conn.execute(
+                    text("""
+                        SELECT role, message AS text
+                        FROM chat_history
+                        WHERE user_id = :user_id
+                        ORDER BY created_at DESC
+                        LIMIT :limit
+                    """),
+                    {
+                        "user_id": user_id,
+                        "limit": limit
+                    }
+                )
+                
+                # Convert SQLAlchemy row objects to dictionary mappings
+                history = [dict(row._mapping) for row in result]
+                
+                # Reverse the list in memory to restore proper chronological timeline order: [User, Model, User...]
+                history.reverse()
+                return history
+            
+        except Exception as e:
+            logger.error("UserConnection.get_recent_chat_history", e)
+            return []
         
 if __name__ == "__main__":
     UserConnection().create_document_table()

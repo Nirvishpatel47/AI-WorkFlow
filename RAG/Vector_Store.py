@@ -1,7 +1,6 @@
 from Security.get_secretes import load_env_from_secret
 from Security.Advance_Logger import AdvancedLogger
 from RAG.Gemini_Api_connection import GeminiFunctions
-
 from qdrant_client import QdrantClient
 from qdrant_client.models import (
     VectorParams,
@@ -9,7 +8,8 @@ from qdrant_client.models import (
     PointStruct,
     FieldCondition,
     Filter,
-    MatchValue
+    MatchValue,
+    PayloadSchemaType
 )
 
 import uuid
@@ -42,11 +42,7 @@ class VectorStore:
     def _create_collection_if_not_exists(self):
         try:
             collections = self.client.get_collections()
-
-            collection_names = [
-                collection.name
-                for collection in collections.collections
-            ]
+            collection_names = [c.name for c in collections.collections]
 
             if COLLECTION_NAME not in collection_names:
                 self.client.create_collection(
@@ -56,65 +52,96 @@ class VectorStore:
                         distance=Distance.COSINE
                     )
                 )
+                logger.info(f"Created new collection: {COLLECTION_NAME}")
+
+            self.client.create_payload_index(
+                collection_name=COLLECTION_NAME,
+                field_name="user_id",
+                field_schema=PayloadSchemaType.INTEGER,
+            )
+            logger.info("Verified and enforced user_id payload index in Qdrant.")
 
         except Exception as e:
-            logger.error(
-                "VectorStore._create_collection_if_not_exists",
-                e
-            )
+            logger.error("VectorStore._create_collection_if_not_exists", e)
 
-    def add_vector(self, query: str, Documnet_id: int = 0) -> bool:
+    def add_vectors_batch(self, user_id: int, chunks: list[str], document_id: int = 0) -> bool:
+        """
+        Generates individual embeddings for document text chunks and inserts them as a batch.
+        """
         try:
-            vector = self.gemini.generate_embeddings(query)
-
-            if len(vector) == 0:
+            if not chunks:
                 return False
 
-            self.client.upsert(
-                collection_name=COLLECTION_NAME,
-                points=[
+            points = []
+            for chunk in chunks:
+                if not chunk.strip():
+                    continue
+                    
+                # Generate a vector for each isolated chunk segment
+                vector = self.gemini.generate_embeddings(chunk)
+                if len(vector) == 0:
+                    continue
+
+                points.append(
                     PointStruct(
                         id=str(uuid.uuid4()),
                         vector=vector.tolist(),
                         payload={
-                            "text": query,
-                            "document_id": Documnet_id
+                            "text": chunk, # Stores only this specific chunk context
+                            "user_id": user_id,
+                            "document_id": document_id
                         }
+                    )
+                )
+
+            # Atomic upload of all points to your collection index
+            if points:
+                self.client.upsert(
+                    collection_name=COLLECTION_NAME,
+                    points=points
+                )
+                return True
+            return False
+
+        except Exception as e:
+            logger.error("VectorStore.add_vectors_batch", e)
+            return False
+
+    def search_vector(self, query: str, user_id: int, limit: int = 3):
+        """
+        Searches the collection using an isolated payload metadata filter for the explicit user.
+        """
+        try:
+            vector = self.gemini.generate_embeddings(query)
+            if len(vector) == 0:
+                return []
+
+            # Hard filter restriction: Matches only records belonging to the authenticated user
+            user_isolation_filter = Filter(
+                must=[
+                    FieldCondition(
+                        key="user_id",
+                        match=MatchValue(value=user_id)
                     )
                 ]
             )
 
-            return True
-
-        except Exception as e:
-            logger.error("VectorStore.add_vector", e)
-            return False
-
-    def search_vector(self, query: str, limit: int = 5):
-        try:
-            vector = self.gemini.generate_embeddings(query)
-
-            if len(vector) == 0:
-                return []
-
             results = self.client.query_points(
                 collection_name=COLLECTION_NAME,
                 query=vector.tolist(),
+                query_filter=user_isolation_filter, # Restricts search space at the engine layer
                 limit=limit
             )
 
-            output = []
-
-            for result in results.points: output.append(result.payload)
-
-            return output
-
+            return [result.payload for result in results.points]
         except Exception as e:
             logger.error("VectorStore.search_vector", e)
             return []
-    
 
-    def delete_vectors_by_document_id(self, document_id: int) -> bool:
+    def delete_vectors_by_document_id(self, document_id: int, user_id: int) -> bool:
+        """
+        Deletes vector partitions by document ID while validating user ownership bounds.
+        """
         try:
             self.client.delete(
                 collection_name=COLLECTION_NAME,
@@ -123,13 +150,15 @@ class VectorStore:
                         FieldCondition(
                             key="document_id",
                             match=MatchValue(value=document_id)
+                        ),
+                        FieldCondition(
+                            key="user_id",
+                            match=MatchValue(value=user_id) # Prevents unauthorized deletion cross-calls
                         )
                     ]
                 )
             )
-
             return True
-
         except Exception as e:
             logger.error("VectorStore.delete_vectors_by_document_id", e)
             return False
@@ -137,13 +166,7 @@ class VectorStore:
 
 if __name__ == "__main__":
     store = VectorStore()
-
-    store.add_vector("FastAPI authentication system")
-    store.add_vector("Python vector databases")
-    store.add_vector("Gemini embeddings tutorial")
-
-    results = store.search_vector(
-        "How to use embeddings with FastAPI?"
-    )
+    
+    results = store.search_vector("How to use embeddings with FastAPI?", user_id=3) # Missing 'user_id' parameter!
 
     print(results)

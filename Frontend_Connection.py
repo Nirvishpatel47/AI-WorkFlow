@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Form, UploadFile, File, Depends
 from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.encoders import jsonable_encoder
 from fastapi import Header, HTTPException
 from fastapi.staticfiles import StaticFiles
 from DATABASE.SQL_Database import UserConnection
@@ -114,7 +115,7 @@ async def add_document(user_id: int = Depends(get_user_id), file: UploadFile = F
                 {
                     "success": True,
                     "filename": file.filename,
-                    "text": extracted_text
+                    "message": "Document Uploaded Successfully"
                 }
             )
         
@@ -139,10 +140,69 @@ async def add_document(user_id: int = Depends(get_user_id), file: UploadFile = F
         if temp_path and os.path.exists(temp_path):
             os.remove(temp_path)
 
-@app.post("/chat")
-async def chat(query: str = Form(...)):
+@app.post("/show_documents")
+async def show_documents(user_id: int = Depends(get_user_id)):
     try:
-        answer = Embedding_Generator.answer_from_embeddings(query)
+        result = User_Connection.get_documents_data_by_userId(user_id=user_id)
+        if result:
+            json_compatible_data = jsonable_encoder(result)
+            return JSONResponse(
+                {
+                    "success": True,
+                    "message": "Here is the list",
+                    "Documents_data": json_compatible_data
+                }
+            )
+        return JSONResponse(
+            {
+                "success": False,
+                "message": "Failed to fetch data",
+                "Documents_data": []
+            }
+        )
+    except Exception as e:
+        logger.error("show_documents", e)
+        return JSONResponse(
+            {
+                "success": False,
+                "message": "Failed to fetch data",
+                "Documents_data": []
+            }
+        )
+    
+@app.post("/delete_document")
+async def delete_document_from_id(Document_id: int, user_id: int = Depends(get_user_id)):
+    try:
+        result = User_Connection.delete_document(user_id=user_id, document_id=Document_id)
+        if result:
+            return JSONResponse(
+                {
+                    "success": True,
+                    "message": "Document Deleted",
+                    "Numbers_Of_Document_deleted": result
+                }
+            )
+        return JSONResponse(
+                {
+                    "success": False,
+                    "message": "Failed to fetch data",
+                    "Numbers_Of_Document_deleted": 0
+                }
+            )
+    except Exception as e:
+        logger.error("delete_document_from_id", e)
+        return JSONResponse(
+            {
+                "success": False,
+                "message": "Failed to fetch data",
+                "Numbers_Of_Document_deleted": 0
+            }
+        )
+
+@app.post("/chat")
+async def chat(user_id: int = Depends(get_user_id), query: str = Form(...)):
+    try:
+        answer = Embedding_Generator.answer_from_embeddings(user_id=user_id, user_query=query)
         return JSONResponse(
             {
                 "success": True,
