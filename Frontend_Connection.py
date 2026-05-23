@@ -8,6 +8,7 @@ from Security.Advance_Logger import AdvancedLogger
 from Security.JWT_token import create_token, decode_token
 from RAG.EmbeddingsGenerationnStorage import EmbeddingsALL
 from Files_Management.Files_Parser import ParseFile
+from RAG.Vector_Store import VectorStore
 from pathlib import Path
 import os
 import tempfile
@@ -20,6 +21,8 @@ logger = AdvancedLogger()
 app = FastAPI()
 
 User_Connection = UserConnection()
+
+vector = VectorStore()
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
@@ -174,7 +177,8 @@ async def show_documents(user_id: int = Depends(get_user_id)):
 async def delete_document_from_id(Document_id: int, user_id: int = Depends(get_user_id)):
     try:
         result = User_Connection.delete_document(user_id=user_id, document_id=Document_id)
-        if result:
+        vector_ = vector.delete_vectors_by_document_id(document_id=Document_id, user_id=user_id)
+        if result and vector:
             return JSONResponse(
                 {
                     "success": True,
