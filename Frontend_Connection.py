@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Form, UploadFile, File, Depends
+from contextlib import asynccontextmanager
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.encoders import jsonable_encoder
 from fastapi import Header, HTTPException
@@ -9,6 +10,8 @@ from Security.JWT_token import create_token, decode_token
 from RAG.EmbeddingsGenerationnStorage import EmbeddingsALL
 from Files_Management.Files_Parser import ParseFile
 from RAG.Vector_Store import VectorStore
+from fastapi_limiter import FastAPILimiter
+import redis.asyncio as redis
 from pathlib import Path
 import os
 import tempfile
@@ -206,6 +209,7 @@ async def delete_document_from_id(Document_id: int, user_id: int = Depends(get_u
 @app.post("/chat")
 async def chat(user_id: int = Depends(get_user_id), query: str = Form(...)):
     try:
+        
         answer = Embedding_Generator.answer_from_embeddings(user_id=user_id, user_query=query)
         return JSONResponse(
             {
