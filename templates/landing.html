@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Core SEO Optimization Engine -->
+    <title>Smart AI — Private Multi-Format Document Knowledge Base & RAG Workspace</title>
+    <meta name="description" content="Stop losing institutional context. Smart AI securely parses, fragments, and structures corporate SOPs, PDFs, emails, and spreadsheets into an isolated vector workspace for zero-hallucination interactive chat.">
+    <meta name="keywords" content="RAG system, AI vector search, chat with documents, parse PDFs, corporate SOP search, index email logs, private knowledge base, Qdrant AI, Gemini copilot">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://yourdomain.com/landingpage">
+    
+    <!-- Open Graph Protocol Mapping for Social Engine Scraping -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Smart AI — Private Multi-Format Document Knowledge Base">
+    <meta property="og:description" content="Securely index entire corporate SOPs, email archives, spreadsheets, or PDFs into a dedicated neural network knowledge layer. Get grounded answers instantly.">
+    <meta property="og:url" content="https://yourdomain.com/landingpage">
+    <meta property="og:image" content="/static/assets/og-preview.jpg">
+
+    <!-- Typographic Infrastructure Mapping -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        /* ─── Exact Architectural UI/UX Theme Variables ─── */
+        :root {
+            --bg-main: #0B1020;
+            --bg-surface: #12182B;
+            --bg-elevated: #182033;
+            --bg-sidebar: #0d1424;
+            --border-color: #243047;
+            --border-focus: #3BC9DB;
+
+            --text-primary: #F3F7FF;
+            --text-secondary: #94A3B8;
+            --text-muted: #5a6a85;
+
+            --accent-color: #3BC9DB;
+            --accent-hover: #2bb8ca;
+            --accent-secondary: #5B7CFA;
+            --accent-secondary-hover: #4a6bec;
+
+            --success: #22C55E;
+            --warning: #F59E0B;
+            --error: #EF4444;
+            --info: #5B7CFA;
+
+            --font-stack: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+            --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+        }
+
+        /* ─── Global Base Core Overrides ─── */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: var(--font-stack);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.5;
+            background-image:
+                radial-gradient(ellipse at 20% 10%, rgba(59, 201, 219, 0.05) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 80%, rgba(91, 124, 250, 0.05) 0%, transparent 60%);
+        }
+
+        /* ─── Structural Mobile-First Layout Engine ─── */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Navigation Bar Layout Header */
+        .site-header {
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(11, 16, 32, 0.8);
+            backdrop-filter: blur(12px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .nav-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand-logo {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo-icon-box {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-secondary));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-links {
+            display: none;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            font-size: 14px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.15s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* Unified CTA Control Primitives */
+        .cta-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-secondary));
+            color: #ffffff;
+            border-radius: 9px;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: opacity 0.15s ease, transform 0.1s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .cta-btn:hover { opacity: 0.9; }
+        .cta-btn:active { transform: scale(0.98); }
+
+        .cta-btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .cta-btn-outline:hover {
+            background: rgba(255, 255, 255, 0.03);
+            border-color: var(--text-secondary);
+        }
+
+        .cta-btn-large {
+            padding: 14px 32px;
+            font-size: 16px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px -8px rgba(91, 124, 250, 0.4);
+        }
+
+        /* Hero Context Segment Frame */
+        .hero-section {
+            padding: 140px 0 60px;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(59, 201, 219, 0.08);
+            border: 1px solid rgba(59, 201, 219, 0.2);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 24px;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .hero-badge .pulse-dot {
+            width: 6px;
+            height: 6px;
+            background-color: var(--accent-color);
+            border-radius: 50%;
+            animation: pulse-glow 2s infinite;
+        }
+
+        .hero-title {
+            font-size: 32px;
+            font-weight: 700;
+            line-height: 1.25;
+            letter-spacing: -1px;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        .hero-title span {
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 15px;
+            color: var(--text-secondary);
+            max-width: 680px;
+            margin: 0 auto 36px;
+            line-height: 1.6;
+        }
+
+        /* ─── High-Value Multi-Format Support Dashboard Display Panel ─── */
+        .matrix-console {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            margin: 40px 0;
+            padding: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            text-align: left;
+        }
+
+        .matrix-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+        }
+
+        .matrix-title {
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--accent-color);
+        }
+
+        .matrix-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .matrix-item {
+            background: rgba(11, 16, 32, 0.4);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .matrix-item-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .matrix-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .icon-pdf { background: rgba(239, 68, 68, 0.1); color: var(--error); }
+        .icon-email { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+        .icon-sop { background: rgba(34, 197, 94, 0.1); color: var(--success); }
+        .icon-sheet { background: rgba(16, 185, 129, 0.1); color: #10B981; }
+        .icon-code { background: rgba(91, 124, 250, 0.1); color: var(--accent-secondary); }
+
+        .matrix-text h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+
+        .matrix-text p {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .matrix-tag {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-color);
+            padding: 4px 10px;
+            border-radius: 20px;
+            color: var(--text-muted);
+        }
+
+        /* Informational Positioning Framework */
+        .framework-section {
+            padding: 60px 0;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .section-header {
+            max-width: 700px;
+            margin-bottom: 40px;
+        }
+
+        .section-label {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            text-transform: uppercase;
+            color: var(--accent-color);
+            letter-spacing: 0.1em;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        .section-desc {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .content-box {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .content-box h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-primary);
+        }
+
+        .content-box h3 svg {
+            color: var(--accent-color);
+            flex-shrink: 0;
+        }
+
+        .content-box p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Multi-Step Guide Roadmap Timeline */
+        .usage-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .step-item {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+
+        .step-number {
+            width: 32px;
+            height: 32px;
+            background: rgba(59, 201, 219, 0.1);
+            border: 1px solid rgba(59, 201, 219, 0.2);
+            color: var(--accent-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-mono);
+            font-size: 14px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .step-info h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--text-primary);
+        }
+
+        .step-info p {
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Feature Matrix Presentation Panels */
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            padding-top: 10px;
+        }
+
+        .feature-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 28px;
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-secondary));
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .feature-card:hover {
+            border-color: rgba(59, 201, 219, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .feature-card:hover::before { opacity: 0.6; }
+
+        .feature-icon-wrapper {
+            width: 42px;
+            height: 42px;
+            background: rgba(91, 124, 250, 0.1);
+            border: 1px solid rgba(91, 124, 250, 0.2);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-secondary);
+            margin-bottom: 20px;
+        }
+
+        .feature-card:nth-child(even) .feature-icon-wrapper {
+            background: rgba(59, 201, 219, 0.1);
+            border-color: rgba(59, 201, 219, 0.2);
+            color: var(--accent-color);
+        }
+
+        .feature-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: -0.3px;
+        }
+
+        .feature-desc {
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Operational Footer Element Mapping */
+        .site-footer {
+            padding: 40px 0;
+            border-top: 1px solid var(--border-color);
+            background-color: rgba(13, 20, 36, 0.7);
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* ─── Media Queries Optimization Constraints (Desktop Enhancement Layer) ─── */
+        @media (min-width: 768px) {
+            .nav-links {
+                display: flex;
+            }
+
+            .hero-title {
+                font-size: 54px;
+                line-height: 1.15;
+                max-width: 900px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .hero-subtitle {
+                font-size: 17px;
+                margin-bottom: 44px;
+            }
+
+            .matrix-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+            }
+
+            .framework-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 40px;
+            }
+
+            .features-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 24px;
+            }
+
+            .feature-card {
+                padding: 32px;
+            }
+
+            .section-title {
+                font-size: 32px;
+            }
+        }
+
+        /* Animation Micro-Primitives */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.95); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Unified Site Application Header -->
+    <header class="site-header">
+        <div class="container nav-wrapper">
+            <a href="#" class="brand-logo" aria-label="Smart AI Home Page">
+                <div class="logo-icon-box">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                </div>
+                Smart AI
+            </a>
+            
+            <nav class="nav-links">
+                <a href="#problem">The Problem</a>
+                <a href="#solution">Our Solution</a>
+                <a href="#features">Features</a>
+                <a href="#usage">How It Works</a>
+            </nav>
+
+            <div class="nav-actions">
+                <a href="/login" class="cta-btn cta-btn-outline" id="navLoginBtn">Login</a>
+                <a href="/signin" class="cta-btn" id="navSignInBtn">Sign Up</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Section Structure Container -->
+    <main>
+        <!-- Hero Section Frame -->
+        <section class="hero-section">
+            <div class="container">
+                <div class="hero-badge">
+                    <span class="pulse-dot"></span>
+                    Isolated RAG Knowledge Engine v0.1.0
+                </div>
+                <h1 class="hero-title">
+                    Organize, Manage and <span>Chat Directly</span> With Your Project Workspace Files
+                </h1>
+                <p class="hero-subtitle">
+                    An enterprise-grade, multi-tenant Retrieval-Augmented Generation (RAG) platform. Securely upload operational documents, email archives, or financial spreadsheets to query context instantly.
+                </p>
+                <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: 40px;">
+                    <a href="/login" class="cta-btn cta-btn-large" id="mainHeroCta">Launch Workspace App</a>
+                    <a href="#problem" class="cta-btn cta-btn-large cta-btn-outline">Explore Product Specs</a>
+                </div>
+
+                <!-- High-Value Native Asset Matrix Display Component (Replaced code block) -->
+                <div class="matrix-console">
+                    <div class="matrix-header">
+                        <div class="matrix-title">Supported Document Formats & Pipeline Extraction</div>
+                        <span class="file-spec-tag" style="font-size: 11px; background: rgba(59, 201, 219, 0.1); color: var(--accent-color); padding: 4px 10px; border-radius: 12px; font-weight: 600;">Max 15MB / File[cite: 7]</span>
+                    </div>
+                    
+                    <div class="matrix-grid">
+                        <!-- Asset Card: PDFs -->
+                        <div class="matrix-item">
+                            <div class="matrix-item-info">
+                                <div class="matrix-icon icon-pdf">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                                </div>
+                                <div class="matrix-text">
+                                    <h4>Technical PDFs & Manuals</h4>
+                                    <p>High-fidelity text and structural extraction layout parsing[cite: 7].</p>
+                                </div>
+                            </div>
+                            <span class="matrix-tag">.pdf</span>
+                        </div>
+
+                        <!-- Asset Card: Corporate SOPs -->
+                        <div class="matrix-item">
+                            <div class="matrix-item-info">
+                                <div class="matrix-icon icon-sop">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6"></path><path d="M16 13H8"></path><path d="M16 17H8"></path><path d="M10 9H8"></path></svg>
+                                </div>
+                                <div class="matrix-text">
+                                    <h4>Corporate SOPs & Guidelines</h4>
+                                    <p>Converts operational policies into structured semantic parent chunks[cite: 7].</p>
+                                </div>
+                            </div>
+                            <span class="matrix-tag">.docx / .txt</span>
+                        </div>
+
+                        <!-- Asset Card: Email Communications -->
+                        <div class="matrix-item">
+                            <div class="matrix-item-info">
+                                <div class="matrix-icon icon-email">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                                </div>
+                                <div class="matrix-text">
+                                    <h4>Email Correspondence Logs</h4>
+                                    <p>Indexes communication chains, headers, and historical text segments[cite: 7].</p>
+                                </div>
+                            </div>
+                            <span class="matrix-tag">.eml</span>
+                        </div>
+
+                        <!-- Asset Card: Tabular Sheets -->
+                        <div class="matrix-item">
+                            <div class="matrix-item-info">
+                                <div class="matrix-icon icon-sheet">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line><line x1="15" y1="3" x2="15" y2="21"></line><line x1="3" y1="9" x2="21" y2="9"></line><line x1="3" y1="15" x2="21" y2="15"></line></svg>
+                                </div>
+                                <div class="matrix-text">
+                                    <h4>Spreadsheets & Data Arrays</h4>
+                                    <p>Processes raw relational data matrices and structural cell context[cite: 7].</p>
+                                </div>
+                            </div>
+                            <span class="matrix-tag">.csv / .xlsx</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 1: Problem Statement & Solution Analysis -->
+        <section class="framework-section" id="problem">
+            <div class="container">
+                <div class="framework-grid">
+                    
+                    <!-- Left Column: Problem Definition -->
+                    <div>
+                        <div class="section-header">
+                            <span class="section-label">01 / Functional Pain Points</span>
+                            <h2 class="section-title">The Problem: Structural Context Blindness & Information Overload</h2>
+                            <p class="section-desc">
+                                Modern teams and developers are drowning in siloed files distributed across random emails, legal PDFs, database configurations, and hidden code repositories[cite: 7, 13].
+                            </p>
+                        </div>
+                        
+                        <div class="content-box">
+                            <h3>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                                Hallucinations & Fabrications
+                            </h3>
+                            <p>Standard open-domain LLMs lack visibility into your specific corporate documents or private workspaces. Forcing external models to guess internal protocols or software rules produces inaccurate, ungrounded hallucinations.</p>
+                        </div>
+
+                        <div class="content-box">
+                            <h3>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                                Multi-Tenant Leak Risks
+                            </h3>
+                            <p>Most basic AI systems pool corporate knowledge into unstructured indexes without multi-tenant security layers, introducing privacy hazards where users could access isolated cross-account content[cite: 11, 13].</p>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Product Resolution -->
+                    <div id="solution">
+                        <div class="section-header">
+                            <span class="section-label">02 / System Architecture</span>
+                            <h2 class="section-title">What It Is: An Isolated High-Performance RAG Workspace</h2>
+                            <p class="section-desc">
+                                Smart AI is a multi-tenant Retrieval-Augmented Generation ecosystem that safely extracts, indexes, and segments workspace knowledge base items inside a secure vector engine[cite: 11, 12, 13].
+                            </p>
+                        </div>
+
+                        <div class="content-box" style="border-color: rgba(59, 201, 219, 0.25); background: rgba(59, 201, 219, 0.01);">
+                            <h3>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                                How It Solves the Problem
+                            </h3>
+                            <p style="margin-bottom: 12px;">The workspace architecture changes how information is stored and queried:</p>
+                            <p style="margin-bottom: 12px;"><strong>1. Precise Pipeline Fragmentation:</strong> Ingestion pipelines parse emails, SOPs, and source code based on structural line bounds to preserve document relationship data[cite: 7, 12].</p>
+                            <p style="margin-bottom: 12px;"><strong>2. Token Isolation Barriers:</strong> Every document fragment vector is cryptographically tied to an immutable User ID at the database layer, completely preventing cross-tenant leakage[cite: 11, 13].</p>
+                            <p><strong>3. Grounded Contextual Synthesis:</strong> Multi-query prompt expansion retrieves targeted vector segments, forcing the system to return zero-hallucination, fact-based references[cite: 12, 13].</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Core Platform Capabilities Matrix -->
+        <section class="framework-section" id="features" style="background-color: rgba(18, 24, 43, 0.2); border-bottom: 1px solid var(--border-color);">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-label">03 / Platform Mechanics</span>
+                    <h2 class="section-title">Engineered Capabilities Built for Contextual Accuracy</h2>
+                </div>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon-wrapper">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                        </div>
+                        <h3 class="feature-name">Multi-Format Pipeline Extraction</h3>
+                        <p class="feature-desc">Native support for extracting data from PDFs, Word files, corporate SOPs, complex structural spreadsheets (CSV, XLSX), or software repositories[cite: 7, 13].</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon-wrapper">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        </div>
+                        <h3 class="feature-name">Cryptographic Guardrails</h3>
+                        <p class="feature-desc">Secured by high-performance asynchronous JSON Web Token (JWT) infrastructure, ensuring all endpoint mutations validate user permissions[cite: 8, 13].</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon-wrapper">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778-7.778 5.5 5.5 0 0 1 7.777 7.777zm0 0L22 22m-3-3l3 3"></path></svg>
+                        </div>
+                        <h3 class="feature-name">Sub-Query Expansion</h3>
+                        <p class="feature-desc">Deconstructs compound user sentences into multiple basic search prompts simultaneously to extract highly precise contextual details from vector storage[cite: 12, 13].</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Operations Deployment Framework (How to Use) -->
+        <section class="framework-section" id="usage">
+            <div class="container">
+                <div class="framework-grid" style="align-items: center;">
+                    
+                    <div>
+                        <div class="section-header" style="margin-bottom: 24px;">
+                            <span class="section-label">04 / Operator Blueprint</span>
+                            <h2 class="section-title">How to Use Your Intelligent Workspace</h2>
+                            <p class="section-desc">Get started indexing data and querying your personal project knowledge engine in under two minutes.</p>
+                        </div>
+
+                        <div class="usage-steps">
+                            <div class="step-item">
+                                <div class="step-number">01</div>
+                                <div class="step-info">
+                                    <h4>Create Private Access Tokens</h4>
+                                    <p>Register a unique user account via the secure sign-up interface to establish your isolated workspace environment[cite: 8, 13].</p>
+                                </div>
+                            </div>
+
+                            <div class="step-item">
+                                <div class="step-number">02</div>
+                                <div class="step-info">
+                                    <h4>Drag-and-Drop Raw Document Pools</h4>
+                                    <p>Upload files or complete directories through the file interface. Chunker parsers split data blocks to optimize structural semantic mapping[cite: 6, 13].</p>
+                                </div>
+                            </div>
+
+                            <div class="step-item">
+                                <div class="step-number">03</div>
+                                <div class="step-info">
+                                    <h4>Execute Grounded Interaction Chains</h4>
+                                    <p>Chat with your workspace. The context processing loop analyzes historical threads, fetches document vector coordinates, and returns grounded answers[cite: 12, 13].</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; padding: 20px; display: flex; justify-content: center;">
+                        <div style="background: linear-gradient(135deg, rgba(59, 201, 219, 0.05) 0%, rgba(91, 124, 250, 0.05) 100%); border: 1px dashed var(--border-color); padding: 40px; border-radius: 24px; max-width: 400px; width: 100%;">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--accent-color)" stroke-width="1.5" style="margin-bottom: 16px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                            <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 8px;">Ready to Deploy?</h3>
+                            <p style="font-size: 13.5px; color: var(--text-secondary); margin-bottom: 24px; line-height: 1.5;">Access your multi-tenant document knowledge environment now.</p>
+                            <a href="/signin" class="cta-btn" style="width: 100%;" id="innerStepCta">Initialize Free Account</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Base Structural Application Footer Layout -->
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2026 Smart AI Project Systems. Fully integrated cryptographic JWT architecture[cite: 13]. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Interactive Routing Operations Execution Script Layer -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Verify if local authentication packet layer is present to adjust UI navigation safely
+            const token = localStorage.getItem("token");
+            const navLoginBtn = document.getElementById("navLoginBtn");
+            const navSignInBtn = document.getElementById("navSignInBtn");
+            const mainHeroCta = document.getElementById("mainHeroCta");
+            const innerStepCta = document.getElementById("innerStepCta");
+
+            if (token) {
+                // Adjust routing destinations dynamically if session credentials are saved locally
+                if (navLoginBtn) {
+                    navLoginBtn.textContent = "Dashboard";
+                    navLoginBtn.setAttribute("href", "/dashboard");
+                }
+                if (navSignInBtn) {
+                    navSignInBtn.style.display = "none";
+                }
+                if (mainHeroCta) {
+                    mainHeroCta.setAttribute("href", "/dashboard");
+                }
+                if (innerStepCta) {
+                    innerStepCta.textContent = "Go To Dashboard";
+                    innerStepCta.setAttribute("href", "/dashboard");
+                }
+            } else {
+                // Force unauthenticated anchors to cleanly point to correct endpoints
+                if (navLoginBtn) navLoginBtn.setAttribute("href", "/login");
+                if (navSignInBtn) navSignInBtn.setAttribute("href", "/signin");
+                if (mainHeroCta) mainHeroCta.setAttribute("href", "/login");
+                if (innerStepCta) innerStepCta.setAttribute("href", "/signin");
+            }
+        });
+    </script>
+</body>
+</html>

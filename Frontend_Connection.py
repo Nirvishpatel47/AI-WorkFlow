@@ -46,8 +46,14 @@ def get_user_id(authorization: str = Header(...)):
         raise HTTPException(status_code=401, detail="Invalid token")
     
 
-#Login Page
 @app.get("/", response_class=HTMLResponse)
+async def login_page():
+
+    with open("templates/landing.html", "r", encoding="utf-8") as file:
+        return file.read()
+    
+#Login Page
+@app.get("/login", response_class=HTMLResponse)
 async def login_page():
 
     with open("templates/login.html", "r", encoding="utf-8") as file:
