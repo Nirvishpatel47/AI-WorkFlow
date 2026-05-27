@@ -33,7 +33,7 @@
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
                 Chats
             </a>
-            <a href="#" class="nav-item">
+            <a href="/settings" class="nav-item">
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
                 Settings
             </a>
@@ -61,17 +61,20 @@
                 <p class="subtitle">Supports PDF, DOCX, EML, CSV, Excel, or plain text source files.</p>
 
                 <form id="uploadForm">
-                    <div class="file-input-wrapper">
+                    <div class="file-input-wrapper" id="dropZone">
                         <div class="drop-icon">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 16 12 12 8 16"></polyline><line x1="12" y1="12" x2="12" y2="21"></line><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"></path></svg>
                         </div>
-                        <p>Drag & drop or browse to select a file</p>
-                        <input type="file" id="fileInput" name="file" required>
-                        <span>PDF, DOCX, CSV, XLSX, TXT and more</span>
+                        <p class="drop-text-primary">Drag & drop files/folders here or <span class="browse-link">browse</span></p>
+                        <input type="file" id="fileInput" name="files" multiple>
+                        <span class="file-spec-tag">PDF, DOCX, CSV, Excel, Source Files (Max 15MB/file)</span>
                     </div>
+                    
+                    <div id="filePreviewContainer" class="file-preview-container"></div>
+
                     <button type="submit" class="upload-btn">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 16 12 12 8 16"></polyline><line x1="12" y1="12" x2="12" y2="21"></line><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"></path></svg>
-                        Upload File
+                        Upload Collective Batch
                     </button>
                 </form>
                 <div id="message" class="status-banner"></div>

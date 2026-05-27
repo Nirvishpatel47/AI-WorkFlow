@@ -1,5 +1,6 @@
+#python -m RAG.Vector_Store   
 from Security.get_secretes import load_env_from_secret
-from Security.Advance_Logger import AdvancedLogger
+from Security.Advance_Logger import logger
 from RAG.Gemini_Api_connection import GeminiFunctions
 from qdrant_client import QdrantClient
 from qdrant_client.models import (
@@ -8,13 +9,12 @@ from qdrant_client.models import (
     PointStruct,
     FieldCondition,
     Filter,
+    FilterSelector,
     MatchValue,
     PayloadSchemaType
 )
 
 import uuid
-
-logger = AdvancedLogger()
 
 QDRANT_URL = load_env_from_secret("QDRANT_URL")
 QDRANT_API_KEY = load_env_from_secret("QDRANT_API_KEY")
@@ -59,12 +59,19 @@ class VectorStore:
                 field_name="user_id",
                 field_schema=PayloadSchemaType.INTEGER,
             )
+
+            self.client.create_payload_index(
+                collection_name=COLLECTION_NAME,
+                field_name="document_id",
+                field_schema=PayloadSchemaType.INTEGER,
+            )
+
             logger.info("Verified and enforced user_id payload index in Qdrant.")
 
         except Exception as e:
             logger.error("VectorStore._create_collection_if_not_exists", e)
 
-    def add_vectors_batch(self, user_id: int, chunks: list[str], document_id: int = 0) -> bool:
+    async def add_vectors_batch(self, user_id: int, chunks: list[str], document_id: int = 0) -> bool:
         """
         Generates individual embeddings for document text chunks and inserts them as a batch.
         """
@@ -78,9 +85,7 @@ class VectorStore:
                     continue
                     
                 # Generate a vector for each isolated chunk segment
-                vector = self.gemini.generate_embeddings(chunk)
-                if len(vector) == 0:
-                    continue
+                vector = await self.gemini.generate_embeddings(chunk)
 
                 points.append(
                     PointStruct(
@@ -145,17 +150,19 @@ class VectorStore:
         try:
             self.client.delete(
                 collection_name=COLLECTION_NAME,
-                points_selector=Filter(
-                    must=[
-                        FieldCondition(
-                            key="document_id",
-                            match=MatchValue(value=document_id)
-                        ),
-                        FieldCondition(
-                            key="user_id",
-                            match=MatchValue(value=user_id) # Prevents unauthorized deletion cross-calls
-                        )
-                    ]
+                points_selector=FilterSelector(
+                    filter=Filter(
+                        must=[
+                            FieldCondition(
+                                key="document_id",
+                                match=MatchValue(value=document_id)
+                            ),
+                            FieldCondition(
+                                key="user_id",
+                                match=MatchValue(value=user_id) # Prevents unauthorized deletion cross-calls
+                            )
+                        ]
+                    )
                 )
             )
             return True
@@ -163,10 +170,10 @@ class VectorStore:
             logger.error("VectorStore.delete_vectors_by_document_id", e)
             return False
 
+Vector = VectorStore()
 
 if __name__ == "__main__":
-    store = VectorStore()
-    
-    results = store.search_vector("How to use embeddings with FastAPI?", user_id=3) # Missing 'user_id' parameter!
+
+    results = Vector.delete_vectors_by_document_id(document_id=21, user_id=3)
 
     print(results)

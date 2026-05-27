@@ -41,3 +41,5 @@ class AdvancedLogger:
     def critical(self, message: str = ""):
         """Log failures that require immediate attention."""
         self.logger.critical(f"FATAL: {message}")
+
+logger = AdvancedLogger()

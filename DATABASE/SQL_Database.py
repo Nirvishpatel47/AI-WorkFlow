@@ -1,11 +1,9 @@
 #Run via python -m DATABASE.SQL_Database
 from sqlalchemy import create_engine, text
-from Security.Advance_Logger import AdvancedLogger
+from Security.Advance_Logger import logger
 from Security.get_secretes import load_env_from_secret
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
-
-logger = AdvancedLogger()
 
 class UserConnection:
     def __init__(self):
@@ -305,5 +303,7 @@ class UserConnection:
             logger.error("UserConnection.get_recent_chat_history", e)
             return []
         
+connect = UserConnection()
+
 if __name__ == "__main__":
     UserConnection().create_document_table()
