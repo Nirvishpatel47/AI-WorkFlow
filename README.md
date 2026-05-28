@@ -1,4 +1,4 @@
-# DocuMind — Intelligent Document Intelligence Platform
+# AI WorkFlow — Intelligent Document Intelligence Platform
 
 [![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.112-009688?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
@@ -10,6 +10,7 @@
 
 > **Chat with your documents using production-grade RAG.** Upload PDFs, spreadsheets, codebases, emails, and more — then ask natural-language questions and get grounded, context-aware answers powered by Google Gemini and semantic vector search.
 
+[![Live Demo](https://img.shields.io/badge/Live-Demo-00ff99?style=for-the-badge)](https://ai-workflow-y1ka.onrender.com)
 ---
 
 ## What Problem Does This Solve?
