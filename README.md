@@ -10,7 +10,9 @@
 
 > **Chat with your documents using production-grade RAG.** Upload PDFs, spreadsheets, codebases, emails, and more — then ask natural-language questions and get grounded, context-aware answers powered by Google Gemini and semantic vector search.
 
-[![Live Demo](https://img.shields.io/badge/Live-Demo-00ff99?style=for-the-badge)](https://ai-workflow-y1ka.onrender.com)
+## Live Workspace
+
+[![Open Smart AI](https://img.shields.io/badge/Launch-Smart_AI_Workspace-111111?style=for-the-badge&logo=render&logoColor=white)](https://ai-workflow-y1ka.onrender.com)
 ---
 
 ## What Problem Does This Solve?
