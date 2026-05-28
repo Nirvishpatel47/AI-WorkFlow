@@ -75,19 +75,19 @@ Knowledge workers, developers, and researchers routinely drown in unstructured d
                        ▼
 ┌──────────────────────────────────────────────────────────────────┐
 │                    FastAPI Application                           │
-│  ┌─────────────┐  ┌───────────────┐  ┌──────────────────────┐  │
-│  │ RateLimiter │  │  JWT Decoder  │  │  Cache-Control ASGI  │  │
-│  │ (Redis)     │  │  (Dependency) │  │  Middleware           │  │
-│  └─────────────┘  └───────────────┘  └──────────────────────┘  │
+│  ┌─────────────┐  ┌───────────────┐  ┌──────────────────────┐    │
+│  │ RateLimiter │  │  JWT Decoder  │  │  Cache-Control ASGI  │    │
+│  │ (Redis)     │  │  (Dependency) │  │  Middleware           │   │
+│  └─────────────┘  └───────────────┘  └──────────────────────┘    │
 │                                                                  │
-│  ┌──────────────────┐     ┌──────────────────┐                  │
-│  │  /addDocument    │     │  /chat           │                  │
-│  │  Upload → Parse  │     │  Query → RAG     │                  │
-│  │  → Chunk → Embed │     │  Pipeline        │                  │
-│  └────────┬─────────┘     └────────┬─────────┘                  │
-└───────────┼──────────────────────── ┼────────────────────────────┘
-            │                         │
-   ┌────────▼────────┐       ┌────────▼──────────────────────────┐
+│  ┌──────────────────┐     ┌──────────────────┐                   │
+│  │  /addDocument    │     │  /chat           │                   │
+│  │  Upload → Parse  │     │  Query → RAG     │                   │
+│  │  → Chunk → Embed │     │  Pipeline        │                   │
+│  └────────┬─────────┘     └────────┬─────────┘                   │
+└───────────┼────────────────────────┼────────────────────────────┘
+            │                        │
+   ┌────────▼────────┐       ┌───────▼───────────────────────────┐
    │  Files_Parser   │       │        RAG Pipeline               │
    │                 │       │                                   │
    │  .pdf → MD      │       │  1. Condense conversation history │
@@ -99,20 +99,20 @@ Knowledge workers, developers, and researchers routinely drown in unstructured d
             │                └────────┬──────────────────────────┘
    ┌────────▼────────┐                │
    │   Chunker       │       ┌────────▼──────────┐
-   │                 │       │   Gemini API       │
-   │ Semantic chunks │       │   (Flash Lite +    │
-   │ Code-aware split│       │   Embedding 2)     │
+   │                 │       │   Gemini API      │
+   │ Semantic chunks │       │   (Flash Lite +   │
+   │ Code-aware split│       │   Embedding 2)    │
    └────────┬────────┘       └────────┬──────────┘
             │                         │
-   ┌────────▼─────────────────────────▼──────────┐
+   ┌────────▼─────────────────────────▼───────────┐ 
    │                  Qdrant                      │
-   │   Collection: "documents"                   │
+   │   Collection: "documents"                    │
    │   Payload index: user_id, document_id        │
    │   3072-dim Cosine vectors                    │
    └──────────────────────────────────────────────┘
 
    ┌──────────────────┐    ┌──────────────────────┐
-   │   PostgreSQL     │    │       Redis           │
+   │   PostgreSQL     │    │       Redis          │
    │                  │    │                      │
    │  users           │    │  user_docs_meta:{id} │
    │  documents       │    │  chat:{id}:history   │
