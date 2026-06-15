@@ -8,7 +8,7 @@
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-SQL-336791?style=flat-square&logo=postgresql&logoColor=white)](https://postgresql.org)
 [![License](https://img.shields.io/badge/License-MIT-22c55e?style=flat-square)](LICENSE)
 
-> **Chat with your documents using production-grade RAG.** Upload PDFs, spreadsheets, codebases, emails, and more — then ask natural-language questions and get grounded, context-aware answers powered by Google Gemini and semantic vector search.
+> **Chat with your documents using production-oriented RAG.** Upload PDFs, spreadsheets, codebases, emails, and more — then ask natural-language questions and get grounded, context-aware answers powered by Google Gemini and semantic vector search.
 
 ## Live Workspace
 
